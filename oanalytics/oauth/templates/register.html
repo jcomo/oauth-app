@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Register Application</title>
+  </head>
+
+  <body>
+    <h1>Register an Application</h1>
+
+    <form method="POST">
+      {{ form.hidden_tag() }}
+
+      <div>
+        {{ form.name.label }} {{ form.name(size=40) }}
+      </div>
+
+      <div>
+        {{ form.redirect_uri.label }} {{ form.redirect_uri(size=40) }}
+      </div>
+
+      <div>
+        {{ form.icon_url.label }} {{ form.icon_url(size=40) }}
+      </div>
+
+      <div>
+        {{ form.website_url.label }} {{ form.website_url(size=40) }}
+      </div>
+
+      <input type="submit" value="Register" />
+    </form>
+  </body>
+</html>
