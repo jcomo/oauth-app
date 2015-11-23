@@ -1,0 +1,118 @@
+Registering clients
+---
+FROM: client (offline)
+GET /oauth/register
+  name (required) application name
+  redirect_uri (required) the uri to redirect to when issuing an auth code
+  icon_image_url (optional) the icon for this app
+  website (option) the website for this app
+
+In the database, the registered application will have
+  client_id
+  user_id - the id of the user who created this application
+  created_at
+  updated_at
+
+To access this endpoint and register an application, a user must be registered
+
+
+Auth page (for auth grant code)
+---
+FROM: client
+GET /oauth
+  response_type (required) MUST be "code"
+  client_id (required) client id from registration
+  redirect_uri (optional) if more than one specified - should only let one be specified
+  scope (optional) space delimited list of scopes
+  state (recommended) opaque token for preventing CSRF - same token sent back in the callback
+
+If resource owner auths, redirect to page prompting for grant (and scope) approval
+Finally, redirect to client cb uri with auth code
+
+Auth code
+  * should be short lived (~10 mins)
+  * makes sense to put in db with expiration time in order to keep audit log
+
+Auth redirect
+---
+FROM: server
+GET /<client callback uri>
+  code (required) the auth code [grant]
+  state (required) if state was sent along in the initial request
+
+
+Access token request
+---
+FROM: client
+POST /token
+  grant_type (required) must be set to "authorization_code"
+  code (required) auth grant code received from server
+  redirect_uri (required) if specified in the initial request
+  client_id (required) the client id for the application
+
+Ensure that auth code was issued to the client id in the request
+Verify that the auth code is valid (and not expired)
+(not needed) Ensure that redirect_uri paramter is present if present in initial auth request and that values are identical
+
+Example success response (JSON)
+
+{
+  "access_token": "askj11029enjke1n2",
+  "token_type": "example",
+  "expires_in": 3600,
+  "refresh_token": "k3jenaso41inwdaj"
+}
+
+The response MUST include the scope if it is different from the scope requested
+
+
+Client credentials grant
+---
+Client requesting an access token that it can give to others (think github api tokens)
+
+FROM: client
+POST /token
+  grant_type (required) MUST be "client_credentials"
+  scope (optional) space delimited list of scopes
+
+Client MUST authenticate with the auth server [using basic auth]
+
+Example success response (JSON)
+
+{
+  "access_token": "askj11029enjke1n2",
+  "token_type": "example",
+  "expires_in": 3600
+}
+
+In this case, a refresh token SHOULD NOT be included (although, it can)
+
+
+** How to use refresh token?
+
+Refreshing the access token
+---
+FROM: client
+POST /token
+  grant_type (required) MUST be set to "refresh_token"
+  client_id (required) the client id for the application
+  scope (optional) if omitted, treated as originally granted scope. Otherwise, can only be a lesser scope
+
+The refresh token must be validated
+
+
+Error responses
+---
+Must be a 400 status code (unless otherwise specified) and include the "error" key in the response. The value of the key can be one of
+  invalid_request request missing a required parameter or otherwise badly formed
+  invalid_client [401] client auth failed (bad client id, credentials, etc)
+  invalid_grant provided auth grant or refresh token is invalid
+  unauthorized_client client cannot use this auth grant type
+  unsupported_grant_type * auth grant type is not supported by the auth server
+  invalid_scope requested scope is invalid, unknown, malformed, or exceeds scope grant by resource owner
+
+Example error response (JSON)
+
+{
+  "error": "invalid_request"
+}
