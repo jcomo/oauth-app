@@ -1,32 +1,29 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Register</title>
-  </head>
+{% extends "base.html" %}
 
-  <body>
-    <h1>New User</h1>
+{% block title %}Register{% endblock %}
 
-    <form method="POST">
-      {{ form.hidden_tag() }}
+{% block content %}
+<h1>New User</h1>
 
-      <div>
-        {{ form.name.label }} {{ form.name(size=40) }}
-      </div>
+<form method="POST">
+  {{ form.hidden_tag() }}
 
-      <div>
-        {{ form.username.label }} {{ form.username(size=40) }}
-      </div>
+  <div>
+    {{ form.name.label }} {{ form.name(size=40) }}
+  </div>
 
-      <div>
-        {{ form.password.label }} {{ form.password(size=40) }}
-      </div>
+  <div>
+    {{ form.username.label }} {{ form.username(size=40) }}
+  </div>
 
-      <div>
-        {{ form.confirm.label }} {{ form.confirm(size=40) }}
-      </div>
+  <div>
+    {{ form.password.label }} {{ form.password(size=40) }}
+  </div>
 
-      <input type="submit" value="Register" />
-    </form>
-  </body>
-</html>
+  <div>
+    {{ form.confirm.label }} {{ form.confirm(size=40) }}
+  </div>
+
+  <input type="submit" value="Register" />
+</form>
+{% endblock %}

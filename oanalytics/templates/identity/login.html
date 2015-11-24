@@ -1,24 +1,21 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Login</title>
-  </head>
+{% extends "base.html" %}
 
-  <body>
-    <h1>Welcome Back</h1>
+{% block title %}Login{% endblock %}
 
-    <form method="POST">
-      {{ form.hidden_tag() }}
+{% block content %}
+<h1>Welcome Back</h1>
 
-      <div>
-        {{ form.username.label }} {{ form.username(size=40) }}
-      </div>
+<form method="POST">
+  {{ form.hidden_tag() }}
 
-      <div>
-        {{ form.password.label }} {{ form.password(size=40) }}
-      </div>
+  <div>
+    {{ form.username.label }} {{ form.username(size=40) }}
+  </div>
 
-      <input type="submit" value="Login" />
-    </form>
-  </body>
-</html>
+  <div>
+    {{ form.password.label }} {{ form.password(size=40) }}
+  </div>
+
+  <input type="submit" value="Login" />
+</form>
+{% endblock %}

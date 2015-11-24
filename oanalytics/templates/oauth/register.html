@@ -1,32 +1,29 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Register Application</title>
-  </head>
+{% extends "base.html" %}
 
-  <body>
-    <h1>Register an Application</h1>
+{% block title %}Register Application{% endblock %}
 
-    <form method="POST">
-      {{ form.hidden_tag() }}
+{% block content %}
+<h1>Register an Application</h1>
 
-      <div>
-        {{ form.name.label }} {{ form.name(size=40) }}
-      </div>
+<form method="POST">
+  {{ form.hidden_tag() }}
 
-      <div>
-        {{ form.redirect_uri.label }} {{ form.redirect_uri(size=40) }}
-      </div>
+  <div>
+    {{ form.name.label }} {{ form.name(size=40) }}
+  </div>
 
-      <div>
-        {{ form.icon_url.label }} {{ form.icon_url(size=40) }}
-      </div>
+  <div>
+    {{ form.redirect_uri.label }} {{ form.redirect_uri(size=40) }}
+  </div>
 
-      <div>
-        {{ form.website_url.label }} {{ form.website_url(size=40) }}
-      </div>
+  <div>
+    {{ form.icon_url.label }} {{ form.icon_url(size=40) }}
+  </div>
 
-      <input type="submit" value="Register" />
-    </form>
-  </body>
-</html>
+  <div>
+    {{ form.website_url.label }} {{ form.website_url(size=40) }}
+  </div>
+
+  <input type="submit" value="Register" />
+</form>
+{% endblock %}
