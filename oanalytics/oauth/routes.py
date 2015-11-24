@@ -18,7 +18,7 @@ def register(user):
         icon_url = form.data['icon_url']
         website_url = form.data['website_url']
 
-        application = OAuthApplication(name, redirect_uri,
+        application = OAuthApplication(user, name, redirect_uri,
                                        icon_url=icon_url, website_url=website_url)
 
         db.session.add(application)

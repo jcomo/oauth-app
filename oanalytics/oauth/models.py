@@ -13,7 +13,8 @@ class OAuthApplication(db.Model):
     icon_url = db.Column(db.String(80))
     website_url = db.Column(db.String(80))
 
-    def __init__(self, name, redirect_uri, icon_url=None, website_url=None):
+    def __init__(self, user, name, redirect_uri, icon_url=None, website_url=None):
+        self.user = user
         self.name = name
         self.redirect_uri = redirect_uri
         self.icon_url = icon_url

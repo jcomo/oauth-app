@@ -113,8 +113,3 @@ class UserLogoutTestCase(TestCase):
         response = self.client.get(url_for('identity.logout'))
 
         self.assertRedirects(response, url_for('identity.login'))
-
-    @skip("remove the import")
-    def test_user_remains_logged_out_after_logging_out(self):
-        # TODO: do this test when routes are authenticated
-        pass

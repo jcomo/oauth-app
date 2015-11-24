@@ -1,7 +1,6 @@
 from functools import wraps
 
-from flask import request
-from werkzeug.exceptions import Unauthorized
+from flask import request, redirect, url_for
 
 from oanalytics.app import sessions
 from oanalytics.identity.models import User
@@ -20,7 +19,7 @@ def authorize_session(f):
     def wrapper(*args, **kwargs):
         user = _retrieve_user()
         if not user:
-            raise Unauthorized
+            return redirect(url_for('identity.login'))
 
         kwargs['user'] = user
         return f(*args, **kwargs)
