@@ -19,10 +19,14 @@ class User(db.Model):
             self.password_hash = self._hash_password(password)
 
     def _hash_password(self, password):
-        return bcrypt.hashpw(password, bcrypt.gensalt())
+        return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
 
     def _password_matches(self, password):
-        return bcrypt.hashpw(password, self.password_hash) == self.password_hash
+        return bcrypt.hashpw(password.encode('utf-8'), self.password_hash.encode('utf-8')) == self.password_hash
+
+    @classmethod
+    def by_username(cls, username):
+        return cls.query.filter_by(username=username).first()
 
     @classmethod
     def register(cls, name, username, password):
@@ -34,6 +38,6 @@ class User(db.Model):
 
     @classmethod
     def login(cls, username, password):
-        user = User.query.filter_by(username=username)
+        user = cls.by_username(username)
         if user and user._password_matches(password):
             return user

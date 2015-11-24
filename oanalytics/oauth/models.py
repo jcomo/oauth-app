@@ -1,7 +1,5 @@
-import string
-import random
-
 from oanalytics.app import db
+from oanalytics.utils import random_id
 
 
 class OAuthApplication(db.Model):
@@ -20,8 +18,4 @@ class OAuthApplication(db.Model):
         self.redirect_uri = redirect_uri
         self.icon_url = icon_url
         self.website_url = website_url
-        self.client_id = self._generate_client_id()
-
-    def _generate_client_id(self):
-        return ''.join(random.choice(string.ascii_letters + string.digits)
-                       for _ in xrange(32))
+        self.client_id = random_id(32)
