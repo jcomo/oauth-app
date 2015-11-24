@@ -9,9 +9,10 @@ from oanalytics.identity.decorators import authorize_session, retrieve_session
 identity = Blueprint('identity', __name__)
 
 
-def _login_user(user, redirect_url):
+def _login_user(user):
     session_id = sessions.create(user)
-    response = redirect(redirect_url)
+    next_url = request.args.get('next') or url_for('analytics.apps')
+    response = redirect(next_url)
     response.set_cookie(SESSION_ID, session_id)
     return response
 
@@ -29,7 +30,7 @@ def register(user):
         password = form.data['password']
 
         new_user = User.register(name, username, password)
-        return _login_user(new_user, url_for('analytics.apps'))
+        return _login_user(new_user)
 
     return render_template('identity/register.html', form=form)
 
@@ -47,7 +48,7 @@ def login(user):
 
         user = User.login(username, password)
         if user:
-            return _login_user(user, url_for('analytics.apps'))
+            return _login_user(user)
 
     return render_template('identity/login.html', form=form)
 

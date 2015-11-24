@@ -15,12 +15,14 @@ class OAuthRegistrationTestCase(TestCase):
     def test_non_logged_in_user_cannot_view_registration(self):
         self.client.get(url_for('identity.logout'))
         response = self.client.get(url_for('oauth.register'))
-        self.assertRedirects(response, url_for('identity.login'))
+        next_url = url_for('oauth.register', _external=True)
+        self.assertRedirects(response, url_for('identity.login', next=next_url))
 
     def test_non_logged_in_user_cannot_submit_registration(self):
         self.client.get(url_for('identity.logout'))
         response = self.client.post(url_for('oauth.register'))
-        self.assertRedirects(response, url_for('identity.login'))
+        next_url = url_for('oauth.register', _external=True)
+        self.assertRedirects(response, url_for('identity.login', next=next_url))
 
     def test_registration_form_display(self):
         response = self.client.get(url_for('oauth.register'))

@@ -81,6 +81,15 @@ class UserLoginTestCase(TestCase):
         session_id = self.get_cookie('session_id')
         self.assertIsNotNone(sessions.retrieve(session_id))
 
+    def test_redirects_when_next_specified(self):
+        User.register('Jonathan Como', 'jcomo', 'dog')
+        data = {'username': 'jcomo', 'password': 'dog'}
+        params = {'next': url_for('identity.logout')}
+
+        response = self.client.post(url_for('identity.login'), data=data, query_string=params)
+
+        self.assertRedirects(response, url_for('identity.logout'))
+
     def test_does_not_login_in_when_credentials_dont_match(self):
         User.register('Jonathan Como', 'jcomo', 'dog')
         data = {'username': 'jcomo', 'password': 'cat'}

@@ -19,7 +19,7 @@ def authorize_session(f):
     def wrapper(*args, **kwargs):
         user = _retrieve_user()
         if not user:
-            return redirect(url_for('identity.login'))
+            return redirect(url_for('identity.login', next=request.url))
 
         kwargs['user'] = user
         return f(*args, **kwargs)

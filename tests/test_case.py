@@ -31,4 +31,3 @@ class TestCase(FlaskTestCase):
         db.drop_all()
         sessions.clear()
         super(TestCase, self).tearDown()
-
