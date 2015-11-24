@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, redirect, url_for
 
 from oanalytics.app import db
+from oanalytics.identity.routes import authorize_session
 from oanalytics.oauth.forms import OAuthApplicationForm
 from oanalytics.oauth.models import OAuthApplication
 
@@ -8,7 +9,8 @@ oauth = Blueprint('oauth', __name__)
 
 
 @oauth.route('/register', methods=['GET', 'POST'])
-def register():
+@authorize_session
+def register(user):
     form = OAuthApplicationForm()
     if form.validate_on_submit():
         name = form.data['name']
@@ -28,5 +30,6 @@ def register():
 
 
 @oauth.route('/applications/<int:application_id>')
+@authorize_session
 def application(application_id):
     return str(application_id)

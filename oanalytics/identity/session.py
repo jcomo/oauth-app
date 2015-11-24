@@ -4,6 +4,8 @@ from werkzeug.contrib.cache import SimpleCache
 
 from oanalytics.utils import random_id
 
+SUGGESTED_KEY = 'session_id'
+
 
 class ExistingSession(Exception):
     pass

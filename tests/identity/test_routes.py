@@ -1,3 +1,5 @@
+from unittest import skip
+
 from flask import url_for
 
 from tests.test_case import TestCase
@@ -49,6 +51,14 @@ class UserRegistrationTestCase(TestCase):
         self.assertEqual(0, User.query.count())
         self.assertIsNone(self.get_cookie('session_id'))
 
+    def test_redirects_when_already_registered(self):
+        user = User.register('Jonathan Como', 'jcomo', 'dog')
+        self.login_as(user)
+
+        response = self.client.get(url_for('identity.register'))
+
+        self.assertRedirects(response, url_for('analytics.apps'))
+
 
 class UserLoginTestCase(TestCase):
     def test_renders_login_form(self):
@@ -79,6 +89,14 @@ class UserLoginTestCase(TestCase):
         self.assertIn("<title>Login</title>", response.data)
         self.assertIsNone(self.get_cookie('session_id'))
 
+    def test_redirects_when_already_registered(self):
+        user = User.register('Jonathan Como', 'jcomo', 'dog')
+        self.login_as(user)
+
+        response = self.client.get(url_for('identity.login'))
+
+        self.assertRedirects(response, url_for('analytics.apps'))
+
 
 class UserLogoutTestCase(TestCase):
     def test_logging_out_destroys_session(self):
@@ -96,6 +114,7 @@ class UserLogoutTestCase(TestCase):
 
         self.assertRedirects(response, url_for('identity.login'))
 
+    @skip("remove the import")
     def test_user_remains_logged_out_after_logging_out(self):
         # TODO: do this test when routes are authenticated
         pass
