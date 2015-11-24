@@ -4,7 +4,7 @@ from oanalytics.app import db
 from oanalytics.oauth.forms import OAuthApplicationForm
 from oanalytics.oauth.models import OAuthApplication
 
-oauth = Blueprint('oauth', __name__, template_folder='templates')
+oauth = Blueprint('oauth', __name__)
 
 
 @oauth.route('/register', methods=['GET', 'POST'])
@@ -24,7 +24,7 @@ def register():
 
         return redirect(url_for('oauth.application', application_id=application.id))
 
-    return render_template('register.html', form=form)
+    return render_template('oauth/register.html', form=form)
 
 
 @oauth.route('/applications/<int:application_id>')

@@ -1,3 +1,5 @@
+from unittest import skip
+
 from flask import url_for
 
 from tests.test_case import TestCase
@@ -6,6 +8,12 @@ from oanalytics.oauth.models import OAuthApplication
 
 
 class OAuthRegistrationTestCase(TestCase):
+    def test_non_logged_in_user_cannot_view_registration(self):
+        pass
+
+    def test_non_logged_in_user_cannot_submit_registration(self):
+        pass
+
     def test_registration_form_display(self):
         response = self.client.get(url_for('oauth.register'))
         self.assert200(response)
@@ -23,7 +31,9 @@ class OAuthRegistrationTestCase(TestCase):
         response = self.client.post(url_for('oauth.register'), data=data)
 
         self.assertIn("<title>Register Application</title>", response.data)
+        self.assertEqual(0, OAuthApplication.query.count())
 
+    @skip("remove import when unskipped")
     def test_registration_successful_redirects_to_application_page(self):
         data = {'name': 'OAuth application', 'redirect_uri': 'http://example.com'}
         response = self.client.post(url_for('oauth.register'), data=data)

@@ -10,6 +10,7 @@ class OAuthApplication(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), nullable=False)
     client_id = db.Column(db.String(40), unique=True, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     redirect_uri = db.Column(db.String(80), nullable=False)
     icon_url = db.Column(db.String(80))
     website_url = db.Column(db.String(80))

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Register</title>
+  </head>
+
+  <body>
+    <h1>New User</h1>
+
+    <form method="POST">
+      {{ form.hidden_tag() }}
+
+      <div>
+        {{ form.name.label }} {{ form.name(size=40) }}
+      </div>
+
+      <div>
+        {{ form.username.label }} {{ form.username(size=40) }}
+      </div>
+
+      <div>
+        {{ form.password.label }} {{ form.password(size=40) }}
+      </div>
+
+      <div>
+        {{ form.confirm.label }} {{ form.confirm(size=40) }}
+      </div>
+
+      <input type="submit" value="Register" />
+    </form>
+  </body>
+</html>
