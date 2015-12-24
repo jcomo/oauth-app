@@ -7,7 +7,7 @@ analytics = Blueprint('analytics', __name__)
 
 @analytics.route('/apps')
 @authorize_session
-def apps():
+def apps(user):
     return jsonify({
         'installs': {
             '2015-11-23': 1285,
