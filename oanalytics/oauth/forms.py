@@ -9,3 +9,9 @@ class OAuthApplicationForm(Form):
     redirect_uri = URLField('Redirect URI', validators=[DataRequired()])
     icon_url = URLField('Icon URL')
     website_url = URLField('Website URL')
+
+
+class OAuthGrantForm(Form):
+    # Put in response type
+    client_id = StringField('Client ID', validators=[DataRequired()])
+    scopes = StringField('Scopes', validators=[DataRequired()])

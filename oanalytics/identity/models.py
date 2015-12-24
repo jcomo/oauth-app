@@ -11,6 +11,9 @@ class User(db.Model):
     oauth_applications = db.relationship('OAuthApplication',
                                          lazy='dynamic',
                                          backref=db.backref('user', lazy='joined'))
+    oauth_grants = db.relationship('OAuthGrant',
+                                   lazy='dynamic',
+                                   backref=db.backref('user', lazy='joined'))
 
     def __init__(self, name, username=None, password=None):
         self.name = name

@@ -52,4 +52,68 @@ class OAuthRegistrationTestCase(TestCase):
 
 
 class OAuthApplicationTestCase(TestCase):
-    pass
+    from unittest import skip
+
+    @skip("remove import")
+    def test_non_logged_in_user_cannot_view_application(self):
+        pass
+
+    @skip("remove import")
+    def test_renders_view_with_application_information(self):
+        pass
+
+    @skip("remove import")
+    def test_not_found_when_no_application_exists(self):
+        pass
+
+
+class OAuthAuthorizationTestCase(TestCase):
+    from unittest import skip
+
+    def setUp(self):
+        super(OAuthAuthorizationTestCase, self).setUp()
+        self.developer = User.register('Joe Dev', 'jdev', 'cat')
+        self.application = OAuthApplication(self.developer, 'Test App', 'http://example.com')
+
+        self.user = User.register('Jonathan Como', 'jcomo', 'dog')
+        self.login_as(self.user)
+
+    def test_redirects_resource_owner_to_login_when_not_logged_in(self):
+        self.client.get(url_for('identity.logout'))
+        query = {'client_id': 'abc', 'response_type': 'code'}
+        response = self.client.get(url_for('oauth.authorize'), query_string=query)
+
+        auth_url = url_for('oauth.authorize', client_id='abc', response_type='code', _external=True)
+        self.assertRedirects(response, url_for('identity.login', next=auth_url))
+
+    def test_prompts_resource_owner_for_scopes_after_logging_in(self):
+        auth_query = {'client_id': self.application.client_id, 'response_type': 'code', 'scopes': 'read_analytics'}
+        response = self.client.get(url_for('oauth.authorize'), query_string=auth_query)
+        self.assert200(response)
+
+        html = response.data
+        title = "<title>Authorize %s</title>" % self.application.name
+        self.assertIn(title, html)
+        self.assertIn("Read analytics data", html)
+
+    def test_redirects_to_application_redirect_uri_when_scopes_accepted(self):
+        auth_data = {'client_id': self.application.client_id, 'response_type': 'code', 'scopes': 'read_analytics'}
+        response = self.client.post(url_for('oauth.authorize'), data=auth_data)
+
+        grant = self.application.grants.first()
+        self.assertIsNotNone(grant)
+
+        redirect_uri = 'http://example.com?code=' + grant.code
+        self.assertIn(response.status_code, (301, 302))
+        self.assertEqual(response.location, redirect_uri)
+
+    @skip("Do this test for get and post")
+    def test_responds_with_error_when_no_application_for_client_id(self):
+        pass
+
+    @skip("Do this test for get and post")
+    def test_responds_with_error_when_specified_scopes_are_invalid(self):
+        pass
+
+    def test_responds_with_error_when_missing_required_parameters(self):
+        pass
