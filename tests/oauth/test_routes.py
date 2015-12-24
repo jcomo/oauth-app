@@ -1,13 +1,14 @@
 from flask import url_for
 
 from tests.test_case import TestCase
+from tests.identity.auth_mixin import AuthTestMixin
 
 from app import db
 from app.oauth.models import OAuthApplication
 from app.identity.models import User
 
 
-class OAuthRegistrationTestCase(TestCase):
+class OAuthRegistrationTestCase(TestCase, AuthTestMixin):
     def setUp(self):
         super(OAuthRegistrationTestCase, self).setUp()
         self.user = User.register('Jonathan Como', 'jcomo', 'dog')
@@ -46,7 +47,7 @@ class OAuthRegistrationTestCase(TestCase):
         self.assertRedirects(response, url_for('oauth.application', application_id=application.id))
 
 
-class OAuthApplicationTestCase(TestCase):
+class OAuthApplicationTestCase(TestCase, AuthTestMixin):
     def setUp(self):
         super(OAuthApplicationTestCase, self).setUp()
         developer = User.register('Joe Dev', 'jdev', 'cat')
@@ -81,7 +82,7 @@ class OAuthApplicationTestCase(TestCase):
         self.assertIn(self.application.redirect_uri, html)
 
 
-class OAuthGrantTestCase(TestCase):
+class OAuthGrantTestCase(TestCase, AuthTestMixin):
     def setUp(self):
         super(OAuthGrantTestCase, self).setUp()
         developer = User.register('Joe Dev', 'jdev', 'cat')
@@ -133,7 +134,7 @@ class OAuthGrantTestCase(TestCase):
         self.assertEqual(response.json, {'error': 'invalid_request'})
 
 
-class OAuthAuthorizationTestCase(TestCase):
+class OAuthAuthorizationTestCase(TestCase, AuthTestMixin):
     def setUp(self):
         super(OAuthAuthorizationTestCase, self).setUp()
         self.developer = User.register('Joe Dev', 'jdev', 'cat')
@@ -191,7 +192,7 @@ class OAuthAuthorizationTestCase(TestCase):
         self.assertEqual(response.json, {'error': 'invalid_request'})
 
 
-class OAuthTokenTestCase(TestCase):
+class OAuthTokenTestCase(TestCase, AuthTestMixin):
     from unittest import skip
 
     @skip('Make this correct')
