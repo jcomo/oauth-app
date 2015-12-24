@@ -1,8 +1,8 @@
 from flask import url_for
 from flask_testing import TestCase as FlaskTestCase
 
-from oanalytics.app import app, db
-from oanalytics.identity.routes import sessions
+from app import app, db
+from app.identity.routes import sessions
 
 
 class TestCase(FlaskTestCase):

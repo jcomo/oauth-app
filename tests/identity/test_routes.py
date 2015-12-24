@@ -4,8 +4,8 @@ from flask import url_for
 
 from tests.test_case import TestCase
 
-from oanalytics.identity.models import User
-from oanalytics.identity.routes import sessions
+from app.identity.models import User
+from app.identity.routes import sessions
 
 
 class UserRegistrationTestCase(TestCase):

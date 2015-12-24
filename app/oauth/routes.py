@@ -1,9 +1,9 @@
 from flask import Blueprint, request, render_template, redirect, url_for
 
-from oanalytics.app import db
-from oanalytics.identity.routes import authorize_session
-from oanalytics.oauth.forms import OAuthApplicationForm, OAuthGrantForm
-from oanalytics.oauth.models import OAuthApplication, OAuthGrant, friendly_scopes, scopes_valid
+from app import db
+from app.identity.routes import authorize_session
+from app.oauth.forms import OAuthApplicationForm, OAuthGrantForm
+from app.oauth.models import OAuthApplication, OAuthGrant, friendly_scopes, scopes_valid
 
 oauth = Blueprint('oauth', __name__)
 

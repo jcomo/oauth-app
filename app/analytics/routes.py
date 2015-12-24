@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify
 
-from oanalytics.identity.routes import authorize_session
+from app.identity.routes import authorize_session
 
 analytics = Blueprint('analytics', __name__)
 

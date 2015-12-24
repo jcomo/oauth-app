@@ -2,7 +2,7 @@ from datetime import timedelta
 
 from werkzeug.contrib.cache import SimpleCache
 
-from oanalytics.utils import random_id
+from app.utils import random_id
 
 SUGGESTED_KEY = 'session_id'
 

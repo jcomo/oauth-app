@@ -1,5 +1,5 @@
-from oanalytics.app import db
-from oanalytics.utils import random_id
+from app import db
+from app.utils import random_id
 
 _SCOPE_DESCRIPTIONS = {
     'read_public_profile': 'Read public profile information',

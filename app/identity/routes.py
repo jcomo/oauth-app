@@ -1,10 +1,10 @@
 from flask import Blueprint, request, render_template, redirect, url_for, g
 
-from oanalytics.app import sessions
-from oanalytics.identity.models import User
-from oanalytics.identity.forms import UserLoginForm, UserRegistrationForm
-from oanalytics.identity.session import SUGGESTED_KEY as SESSION_ID
-from oanalytics.identity.decorators import authorize_session, retrieve_session
+from app import sessions
+from app.identity.models import User
+from app.identity.forms import UserLoginForm, UserRegistrationForm
+from app.identity.session import SUGGESTED_KEY as SESSION_ID
+from app.identity.decorators import authorize_session, retrieve_session
 
 identity = Blueprint('identity', __name__)
 

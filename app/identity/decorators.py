@@ -2,9 +2,9 @@ from functools import wraps
 
 from flask import request, redirect, url_for
 
-from oanalytics.app import sessions
-from oanalytics.identity.models import User
-from oanalytics.identity.session import SUGGESTED_KEY as SESSION_ID
+from app import sessions
+from app.identity.models import User
+from app.identity.session import SUGGESTED_KEY as SESSION_ID
 
 
 def _retrieve_user():

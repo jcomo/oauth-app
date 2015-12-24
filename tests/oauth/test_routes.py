@@ -2,8 +2,8 @@ from flask import url_for
 
 from tests.test_case import TestCase
 
-from oanalytics.oauth.models import OAuthApplication
-from oanalytics.identity.models import User
+from app.oauth.models import OAuthApplication
+from app.identity.models import User
 
 
 class OAuthRegistrationTestCase(TestCase):
