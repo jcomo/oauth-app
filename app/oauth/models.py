@@ -38,6 +38,10 @@ class OAuthApplication(db.Model):
         self.client_id = random_id(32)
 
     @classmethod
+    def by_id(cls, user, application_id):
+        return cls.query.filter_by(id=application_id, user=user).first()
+
+    @classmethod
     def by_client_id(cls, client_id):
         return cls.query.filter_by(client_id=client_id).first()
 

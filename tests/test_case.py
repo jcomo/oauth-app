@@ -6,6 +6,15 @@ from app.identity.routes import sessions
 
 
 class TestCase(FlaskTestCase):
+    def setUp(self):
+        super(TestCase, self).setUp()
+        db.create_all()
+
+    def tearDown(self):
+        db.drop_all()
+        sessions.clear()
+        super(TestCase, self).tearDown()
+
     def create_app(self):
         app.config['DEBUG'] = True
         app.config['WTF_CSRF_ENABLED'] = False
@@ -23,11 +32,9 @@ class TestCase(FlaskTestCase):
         if cookie:
             return cookie.value
 
-    def setUp(self):
-        super(TestCase, self).setUp()
-        db.create_all()
-
-    def tearDown(self):
-        db.drop_all()
-        sessions.clear()
-        super(TestCase, self).tearDown()
+    def assertUnauthenticatedCannotAccess(self, endpoint, **kwargs):
+        self.client.get(url_for('identity.logout'))
+        url = url_for(endpoint, **kwargs)
+        response = self.client.get(url)
+        next_url = url_for(endpoint, _external=True, **kwargs)
+        self.assertRedirects(response, url_for('identity.login', next=next_url))
