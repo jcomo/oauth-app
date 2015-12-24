@@ -12,6 +12,5 @@ class OAuthApplicationForm(Form):
 
 
 class OAuthGrantForm(Form):
-    # Put in response type
     client_id = StringField('Client ID', validators=[DataRequired()])
     scopes = StringField('Scopes', validators=[DataRequired()])
