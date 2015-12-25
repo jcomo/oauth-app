@@ -5,7 +5,6 @@ from app.identity.routes import sessions
 
 class AuthTestMixin(object):
     def tearDown(self):
-        print 'tearing down'
         sessions.clear()
 
     def login_as(self, user):
