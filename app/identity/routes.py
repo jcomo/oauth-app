@@ -60,3 +60,9 @@ def logout():
     response = redirect(url_for('identity.login'))
     response.set_cookie(SESSION_ID, '')
     return response
+
+
+@identity.route('/me')
+@authorize_session
+def me(user):
+    return render_template('identity/profile.html', user=user)

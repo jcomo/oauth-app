@@ -195,16 +195,21 @@ class OAuthAuthorizationTestCase(TestCase, AuthTestMixin):
 class OAuthTokenTestCase(TestCase, AuthTestMixin):
     from unittest import skip
 
-    @skip('Make this correct')
-    def test_responds_with_error_when_scopes_on_auth_do_not_match_grant_request(self):
+    @skip("Unskip when token route done")
+    def test_creates_access_token_with_valid_grant(self):
         grant = OAuthGrant(self.user, self.application.client_id, 'read_public_profile')
         grant_data = {
-            'response_type': 'code',
+            'grant_type': 'authorization_code',
             'client_id': self.application.client_id,
-            'scopes': 'read_analytics_data',
+            'redirect_uri': grant.redirect_uri,
+            'code': grant.code,
         }
 
-        response = self.client.post(url_for('oauth.authorize'), data=grant_data)
+        response = self.client.post(url_for('oauth.token'), data=grant_data)
+        self.assert200(response)
 
-        self.assert400(response)
-        self.assertEqual(response.json, {'error': 'invalid_scopes'})
+        token = response.json
+        self.assertIn('access_token', token)
+        self.assertIn('refresh_token', token)
+        self.assertIn('expires_in', token)
+        self.assertEqual(token['scopes'], 'read_public_profile')
