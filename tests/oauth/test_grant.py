@@ -57,6 +57,3 @@ class OAuthGrantTestCase(TestCase, AuthTestMixin):
 
         self.assert400(response)
         self.assertEqual(response.json, {'error': 'invalid_request'})
-
-
-

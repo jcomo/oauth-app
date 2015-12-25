@@ -52,4 +52,3 @@ class UserLoginTestCase(TestCase, AuthTestMixin):
         response = self.client.get(url_for('identity.login'))
 
         self.assertRedirects(response, url_for('analytics.apps'))
-
