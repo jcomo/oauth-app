@@ -54,7 +54,10 @@ class OAuthGrant(db.Model):
     application_id = db.Column(db.Integer, db.ForeignKey('oauth_application.id'), nullable=False)
     redirect_uri = db.Column(db.String(80), nullable=False)
     scopes = db.Column(db.String(400), nullable=False)
-    code = db.Column(db.String(80), nullable=False)
+    code = db.Column(db.String(40), nullable=False)
+    tokens = db.relationship('OAuthToken',
+                             lazy='dynamic',
+                             backref=db.backref('grant', lazy='joined'))
 
     def __init__(self, user, application, scopes):
         self.user = user
@@ -62,3 +65,27 @@ class OAuthGrant(db.Model):
         self.redirect_uri = application.redirect_uri
         self.scopes = '|'.join(scopes)
         self.code = random_id(32)
+
+    @classmethod
+    def by_code(cls, code):
+        return cls.query.filter_by(code=code).first()
+
+
+class OAuthToken(db.Model):
+    __tablename__ = 'oauth_token'
+
+    id = db.Column(db.Integer, primary_key=True)
+    grant_id = db.Column(db.Integer, db.ForeignKey('oauth_grant.id'), nullable=False)
+    access_token = db.Column(db.String(40), nullable=False)
+    refresh_token = db.Column(db.String(40), nullable=False)
+    scopes = db.Column(db.String(400), nullable=False)
+
+    def __init__(self, grant):
+        self.access_token = random_id(32)
+        self.refresh_token = random_id(32)
+        self.grant = grant
+        self.scopes = grant.scopes
+
+    @classmethod
+    def by_access_token(cls, access_token):
+        return cls.query.filter_by(access_token=access_token).first()

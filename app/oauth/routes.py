@@ -1,10 +1,10 @@
-from flask import Blueprint, request, render_template, redirect, url_for, abort
+from flask import Blueprint, request, render_template, redirect, url_for, abort, jsonify
 
 from app import db
 from app.identity.routes import authorize_session
 from app.oauth import errors
 from app.oauth.forms import OAuthApplicationForm, OAuthGrantForm
-from app.oauth.models import OAuthApplication, OAuthGrant, friendly_scopes, scopes_valid
+from app.oauth.models import OAuthApplication, OAuthGrant, OAuthToken, friendly_scopes, scopes_valid
 
 oauth = Blueprint('oauth', __name__)
 oauth.errorhandler(errors.OAuthError)(errors.view_oauth_error)
@@ -74,6 +74,22 @@ def _grant_authorization(user):
     db.session.commit()
 
     return redirect(application.redirect_uri + '?code=' + grant.code)
+
+
+@oauth.route('/token', methods=['POST'])
+def token():
+    grant = OAuthGrant.by_code(request.form['code'])
+    token = OAuthToken(grant)
+
+    db.session.add(token)
+    db.session.commit()
+
+    return jsonify({
+        'access_token': token.access_token,
+        'refresh_token': token.refresh_token,
+        'expires_at': None,
+        'scopes': token.scopes,
+    })
 
 
 def _retrieve_oauth_application_using(source):
