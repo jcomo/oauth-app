@@ -39,7 +39,7 @@ class OAuthGrantTestCase(TestCase, AuthTestMixin):
         grant_data = {
             'response_type': 'code',
             'client_id': self.application.client_id,
-            'scope': 'read_public_profile|malicious_scope'
+            'scope': 'read_public_profile malicious_scope'
         }
 
         response = self.client.post(url_for('oauth.authorize'), data=grant_data)

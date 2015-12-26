@@ -1,6 +1,6 @@
 from flask_wtf import Form
 from flask_wtf.html5 import URLField
-from wtforms import StringField
+from wtforms import StringField, HiddenField
 from wtforms.validators import DataRequired
 
 
@@ -12,6 +12,6 @@ class OAuthApplicationForm(Form):
 
 
 class OAuthGrantForm(Form):
-    response_type = StringField('Response Type', validators=[DataRequired()])
-    client_id = StringField('Client ID', validators=[DataRequired()])
-    scope = StringField('Scope', validators=[DataRequired()])
+    response_type = HiddenField('Response Type', default='code', validators=[DataRequired()])
+    client_id = HiddenField('Client ID', validators=[DataRequired()])
+    scope = HiddenField('Scope', validators=[DataRequired()])

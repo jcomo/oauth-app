@@ -57,7 +57,8 @@ def _ask_for_authorization():
     if not scopes:
         scopes = ['read_public_profile']
 
-    return render_template('oauth/authorize.html', application=application, scopes=friendly_scopes(scopes))
+    form = OAuthGrantForm(client_id=application.client_id, scope=' '.join(scopes))
+    return render_template('oauth/authorize.html', application=application, form=form, scopes=friendly_scopes(scopes))
 
 
 def _grant_authorization(user):

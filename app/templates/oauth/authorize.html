@@ -12,4 +12,10 @@
   <li>{{ scope }}</li>
   {% endfor %}
 </ul>
+
+<form method="POST">
+  {{ form.hidden_tag() }}
+
+  <input type="submit" value="Authorize" />
+</form>
 {% endblock %}
