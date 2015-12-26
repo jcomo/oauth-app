@@ -38,7 +38,7 @@ class OAuthTokenTestCase(TestCase, AuthTestMixin):
 
         self.assertEqual(token_data['access_token'], token.access_token)
         self.assertEqual(token_data['refresh_token'], token.refresh_token)
-        self.assertEqual(token_data['scopes'], 'read_public_profile')
+        self.assertEqual(token_data['scope'], 'read_public_profile')
 
     def test_responds_with_error_when_code_does_not_exist(self):
         grant_data = {

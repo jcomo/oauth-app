@@ -94,7 +94,7 @@ def token():
         'access_token': token.access_token,
         'refresh_token': token.refresh_token,
         'expires_at': None,
-        'scopes': token.scopes,
+        'scope': token.scopes,
     })
 
 
@@ -117,7 +117,7 @@ def _retrieve_grant_using(source):
 
 
 def _retrieve_scopes_using(source):
-    raw_scopes = source.get('scopes') or ''
+    raw_scopes = source.get('scope') or ''
     scopes = raw_scopes.split(' ')
     if not scopes_valid(scopes):
         raise errors.InvalidScope

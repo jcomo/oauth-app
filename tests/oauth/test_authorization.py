@@ -24,8 +24,8 @@ class OAuthAuthorizationTestCase(TestCase, AuthTestMixin):
         auth_url = url_for('oauth.authorize', client_id='abc', response_type='code', _external=True)
         self.assertRedirects(response, url_for('identity.login', next=auth_url))
 
-    def test_prompts_resource_owner_for_scopes(self):
-        auth_query = {'client_id': self.application.client_id, 'response_type': 'code', 'scopes': 'read_analytics'}
+    def test_prompts_resource_owner_for_scope(self):
+        auth_query = {'client_id': self.application.client_id, 'response_type': 'code', 'scope': 'read_analytics'}
         response = self.client.get(url_for('oauth.authorize'), query_string=auth_query)
         self.assert200(response)
 
@@ -41,11 +41,11 @@ class OAuthAuthorizationTestCase(TestCase, AuthTestMixin):
         self.assert401(response)
         self.assertEqual(response.json, {'error': 'invalid_client'})
 
-    def test_responds_with_error_when_specified_scopes_are_invalid(self):
+    def test_responds_with_error_when_specified_scope_is_invalid(self):
         auth_query = {
             'response_type': 'code',
             'client_id': self.application.client_id,
-            'scopes': 'read_public_profile|malicious_scope'
+            'scope': 'read_public_profile|malicious_scope'
         }
 
         response = self.client.get(url_for('oauth.authorize'), query_string=auth_query)
@@ -56,7 +56,7 @@ class OAuthAuthorizationTestCase(TestCase, AuthTestMixin):
     def test_responds_with_error_when_missing_required_parameters(self):
         auth_query = {
             'client_id': self.application.client_id,
-            'scopes': 'read_public_profile'
+            'scope': 'read_public_profile'
         }
 
         response = self.client.get(url_for('oauth.authorize'), query_string=auth_query)
