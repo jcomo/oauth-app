@@ -1,7 +1,7 @@
 import urllib
 
-# import requests
-from flask import request, redirect, url_for
+import requests
+from flask import request, redirect, url_for, jsonify
 
 from client import app
 
@@ -11,13 +11,16 @@ def _oauth_authorize_url(params):
     return root + '?' + urllib.urlencode(params)
 
 
+def _oauth_token_url():
+    return app.config['OAUTH_BASE_URL'] + '/oauth/token'
+
+
 @app.route('/')
 def index():
     params = {
         'response_type': 'code',
         'client_id': app.config['APP_CLIENT_ID'],
-        'redirect_uri': url_for('authorize', _external=True),
-        'scopes': 'read_analytics read_public_profile',
+        'scope': 'read_analytics read_public_profile',
     }
 
     return redirect(_oauth_authorize_url(params))
@@ -25,4 +28,13 @@ def index():
 
 @app.route('/authorize')
 def authorize():
-    return request.data
+    token_data = {
+        'grant_type': 'authorization_code',
+        'client_id': app.config['APP_CLIENT_ID'],
+        'redirect_uri': request.base_url,
+        'code': request.args.get('code'),
+    }
+
+    response = requests.post(_oauth_token_url(), data=token_data)
+
+    return jsonify(response.json())
