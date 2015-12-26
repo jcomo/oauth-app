@@ -63,7 +63,7 @@ class OAuthGrant(db.Model):
         self.user = user
         self.application = application
         self.redirect_uri = application.redirect_uri
-        self.scopes = '|'.join(scopes)
+        self.scopes = ' '.join(scopes)
         self.code = random_id(32)
 
     @classmethod
