@@ -51,7 +51,7 @@ class OAuthAuthorizationTestCase(TestCase, AuthTestMixin):
         response = self.client.get(url_for('oauth.authorize'), query_string=auth_query)
 
         self.assert400(response)
-        self.assertEqual(response.json, {'error': 'invalid_scopes'})
+        self.assertEqual(response.json, {'error': 'invalid_scope'})
 
     def test_responds_with_error_when_missing_required_parameters(self):
         auth_query = {

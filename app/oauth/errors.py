@@ -21,5 +21,9 @@ class InvalidClient(OAuthError):
     reason = 'invalid_client'
 
 
-class InvalidScopes(OAuthError):
-    reason = 'invalid_scopes'
+class InvalidGrant(OAuthError):
+    reason = 'invalid_grant'
+
+
+class InvalidScope(OAuthError):
+    reason = 'invalid_scope'

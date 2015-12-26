@@ -3,6 +3,7 @@ from flask import url_for
 from tests.test_case import TestCase
 from tests.identity.auth_mixin import AuthTestMixin
 
+from app import db
 from app.oauth.models import OAuthApplication, OAuthGrant, OAuthToken
 from app.identity.models import User
 
@@ -17,6 +18,10 @@ class OAuthTokenTestCase(TestCase, AuthTestMixin):
 
     def test_creates_access_token_with_valid_grant(self):
         grant = OAuthGrant(self.user, self.application, ['read_public_profile'])
+
+        db.session.add(grant)
+        db.session.commit()
+
         grant_data = {
             'grant_type': 'authorization_code',
             'client_id': self.application.client_id,
@@ -36,13 +41,64 @@ class OAuthTokenTestCase(TestCase, AuthTestMixin):
         self.assertEqual(token_data['scopes'], 'read_public_profile')
 
     def test_responds_with_error_when_code_does_not_exist(self):
-        pass
+        grant_data = {
+            'grant_type': 'authorization_code',
+            'client_id': self.application.client_id,
+            'redirect_uri': self.application.redirect_uri,
+            'code': 'invalid code',
+        }
+
+        response = self.client.post(url_for('oauth.token'), data=grant_data)
+        self.assert400(response)
+        self.assertEqual(response.json, {'error': 'invalid_grant'})
 
     def test_responds_with_error_when_no_application_for_client_id(self):
-        pass
+        grant = OAuthGrant(self.user, self.application, ['read_public_profile'])
+
+        db.session.add(grant)
+        db.session.commit()
+
+        grant_data = {
+            'grant_type': 'authorization_code',
+            'client_id': 'invalid client id',
+            'redirect_uri': self.application.redirect_uri,
+            'code': grant.code,
+        }
+
+        response = self.client.post(url_for('oauth.token'), data=grant_data)
+        self.assert401(response)
+        self.assertEqual(response.json, {'error': 'invalid_client'})
 
     def test_responds_with_error_when_redirect_uri_does_not_match_grant(self):
-        pass
+        grant = OAuthGrant(self.user, self.application, ['read_public_profile'])
+
+        db.session.add(grant)
+        db.session.commit()
+
+        grant_data = {
+            'grant_type': 'authorization_code',
+            'client_id': self.application.client_id,
+            'redirect_uri': 'http://mismatch.ed',
+            'code': grant.code,
+        }
+
+        response = self.client.post(url_for('oauth.token'), data=grant_data)
+        self.assert401(response)
+        self.assertEqual(response.json, {'error': 'invalid_client'})
 
     def test_responds_with_error_when_invalid_parameters(self):
-        pass
+        grant = OAuthGrant(self.user, self.application, ['read_public_profile'])
+
+        db.session.add(grant)
+        db.session.commit()
+
+        grant_data = {
+            'grant_type': 'anything',
+            'client_id': self.application.client_id,
+            'redirect_uri': self.application.redirect_uri,
+            'code': grant.code,
+        }
+
+        response = self.client.post(url_for('oauth.token'), data=grant_data)
+        self.assert400(response)
+        self.assertEqual(response.json, {'error': 'invalid_request'})

@@ -78,7 +78,13 @@ def _grant_authorization(user):
 
 @oauth.route('/token', methods=['POST'])
 def token():
-    grant = OAuthGrant.by_code(request.form['code'])
+    _validate_grant_type_using(request.form)
+    _retrieve_oauth_application_using(request.form)
+
+    grant = _retrieve_grant_using(request.form)
+    if grant.redirect_uri != request.form.get('redirect_uri'):
+        raise errors.InvalidClient
+
     token = OAuthToken(grant)
 
     db.session.add(token)
@@ -101,15 +107,29 @@ def _retrieve_oauth_application_using(source):
     return application
 
 
+def _retrieve_grant_using(source):
+    grant_code = source.get('code') or ''
+    grant = OAuthGrant.by_code(grant_code)
+    if not grant:
+        raise errors.InvalidGrant
+
+    return grant
+
+
 def _retrieve_scopes_using(source):
     raw_scopes = source.get('scopes') or ''
     scopes = raw_scopes.split(' ')
     if not scopes_valid(scopes):
-        raise errors.InvalidScopes
+        raise errors.InvalidScope
 
     return scopes
 
 
 def _validate_response_type_using(source):
     if source.get('response_type') != 'code':
+        raise errors.InvalidRequest
+
+
+def _validate_grant_type_using(source):
+    if source.get('grant_type') != 'authorization_code':
         raise errors.InvalidRequest

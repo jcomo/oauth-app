@@ -45,7 +45,7 @@ class OAuthGrantTestCase(TestCase, AuthTestMixin):
         response = self.client.post(url_for('oauth.authorize'), data=grant_data)
 
         self.assert400(response)
-        self.assertEqual(response.json, {'error': 'invalid_scopes'})
+        self.assertEqual(response.json, {'error': 'invalid_scope'})
 
     def test_responds_with_error_when_missing_required_parameters(self):
         grant_data = {
