@@ -4,7 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from app.identity.session import SessionStore
 
 app = Flask(__name__)
-app.config.from_object('config')
+app.config.from_object('app.config')
 
 db = SQLAlchemy(app)
 
