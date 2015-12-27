@@ -1,0 +1,14 @@
+OAuth Token
+- Needs to have expiration (check when authorizing)
+- Route for refresh token (grant_type == 'refresh_token')
+  - Validate the OAuth app and token
+
+OAuth Grant
+- Don't create another grant if there is already an active one
+- Add ability to revoke a grant (and cascade revoke all tokens)
+
+Auth
+- Add strategy to decorator to auth with session id or access token
+
+* CSS styling?
+* Icons for permissions
